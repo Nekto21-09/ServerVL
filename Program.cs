@@ -1,12 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/login", (string username, string password) =>
+User user = new User()
 {
-    if (username == "vova" && password == "227")
+    Name = "Vova",
+    Password = "123"
+    Email = "Vova227@gmail.com"
+};
+
+app.MapGet("/login", (string username, string password, string email) =>
+{
+    if (password == user.Password && email == user.Email)
     {
-        return Results.Ok("Login successful");
+        return Results.Ok(user);
     }
     else
     {
@@ -14,10 +20,29 @@ app.MapGet("/login", (string username, string password) =>
     }
 });
 
-app.MapGet("/signup", (string username, string password) =>
+app.MapGet("/signup", (string username, string password, string email) =>
 {
-    // Implementation for signup logic
-    return Results.Ok("Signup successful");
+    if (email == user.Email)
+    {
+        return Results.BadRequest("Username already taken");
+    }
+    else
+    {
+        User newuser = new User()
+        {
+            Name = username,
+            Password = password,
+            Email = email,
+        };
+
+        return Results.Ok(newuser);
+    }
 });
+
+app.MapGet("/askai", (string request) =>
+{
+    // send request to gemini
+});
+
 
 app.Run();
