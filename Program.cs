@@ -4,11 +4,11 @@ var app = builder.Build();
 User user = new User()
 {
     Name = "Vova",
-    Password = "123"
+    Password = "123",
     Email = "Vova227@gmail.com"
 };
 
-app.MapGet("/login", (string username, string password, string email) =>
+app.MapGet("/login", (string password, string email) =>
 {
     if (password == user.Password && email == user.Email)
     {
@@ -39,9 +39,11 @@ app.MapGet("/signup", (string username, string password, string email) =>
     }
 });
 
-app.MapGet("/askai", (string request) =>
+app.MapGet("/askai", async (string request) =>
 {
-    // send request to gemini
+    AiApi ai = new AiApi();
+    string result = await ai.SendTextRequest(request);
+    return result;
 });
 
 
